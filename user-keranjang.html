@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studio Flawless - Keranjang Booking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#f5f2ec;--white:#fff;--ink:#25231f;--muted:#77736d;--gold:#b99a68;--line:#e9e4dc}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--cream);color:var(--ink);font-family:"DM Sans",sans-serif;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
+
+/* Modal Keranjang Booking */
+.booking-modal {
+ background: var(--white);
+ border-radius: 12px;
+ box-shadow: 0 10px 30px rgba(40,30,20,.08);
+ width: 100%;
+ max-width: 520px;
+ padding: 24px;
+ position: relative;
+}
+.modal-header {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: 20px;
+ border-bottom: 1px solid var(--line);
+ padding-bottom: 15px;
+}
+.modal-title { font: 600 20px "Playfair Display",serif; }
+.close-btn { background: none; border: none; font-size: 18px; cursor: pointer; color: var(--muted); }
+
+.section-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+.add-more { color: var(--gold); text-decoration: none; font-weight: 600; }
+
+.item-card {
+ border: 1px solid var(--line);
+ border-radius: 8px;
+ padding: 12px;
+ display: flex;
+ gap: 12px;
+ align-items: center;
+ margin-bottom: 10px;
+ background: #faf8f5;
+}
+.item-img { width: 45px; height: 45px; border-radius: 6px; object-fit: cover; }
+.item-info { flex: 1; }
+.item-name { font: 600 13px "Playfair Display",serif; margin-bottom: 2px; }
+.item-price { font-size: 11px; font-weight: 700; color: var(--ink); }
+.delete-btn { background: none; border: none; color: var(--muted); cursor: pointer; }
+
+/* Tanggal & Hari */
+.date-section { margin: 20px 0; }
+.date-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.month-year { font-size: 12px; font-weight: 600; color: var(--ink); }
+.date-nav-btns { display: flex; gap: 5px; }
+.date-nav-btn { background: #fff; border: 1px solid var(--line); border-radius: 4px; width: 24px; height: 24px; cursor: pointer; display: grid; place-items: center; font-size: 11px; }
+
+.dates-grid {
+ display: grid;
+ grid-template-columns: repeat(5, 1fr);
+ gap: 8px;
+ overflow-x: auto;
+ padding-bottom: 4px;
+}
+.date-card {
+ background: #fff;
+ border: 1px solid var(--line);
+ border-radius: 8px;
+ padding: 10px 4px;
+ text-align: center;
+ cursor: pointer;
+ transition: all 0.2s;
+}
+.date-card:hover { border-color: var(--gold); }
+.date-card.active { background: var(--gold); color: #fff; border-color: var(--gold); }
+.date-card .day-name { font-size: 9px; text-transform: uppercase; margin-bottom: 4px; opacity: 0.8; }
+.date-card .day-num { font-size: 14px; font-weight: 700; }
+.date-card .month-short { font-size: 8px; margin-top: 2px; opacity: 0.8; }
+
+/* Jam Kunjungan */
+.time-section { margin-bottom: 20px; }
+.time-grid { display: flex; gap: 8px; flex-wrap: wrap; }
+.time-btn {
+ background: #fff;
+ border: 1px solid var(--line);
+ border-radius: 6px;
+ padding: 8px 12px;
+ font-size: 11px;
+ font-weight: 500;
+ cursor: pointer;
+}
+.time-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+/* Metode Pembayaran */
+.payment-section { margin-bottom: 20px; }
+.payment-option {
+ border: 1px solid var(--line);
+ border-radius: 8px;
+ padding: 12px;
+ display: flex;
+ align-items: flex-start;
+ gap: 10px;
+ margin-bottom: 8px;
+ cursor: pointer;
+ background: #fff;
+ transition: border-color 0.2s;
+}
+.payment-option.selected { border-color: var(--gold); background: #fdfbf7; }
+.payment-option input { margin-top: 2px; accent-color: var(--gold); }
+.payment-details { flex: 1; }
+.payment-title { font-size: 12px; font-weight: 700; margin-bottom: 2px; }
+.payment-desc { font-size: 10px; color: var(--muted); }
+
+/* Ringkasan Harga */
+.summary-section {
+ border-top: 1px dashed var(--line);
+ padding-top: 15px;
+ margin-bottom: 20px;
+}
+.summary-row {
+ display: flex;
+ justify-content: space-between;
+ font-size: 11px;
+ color: var(--muted);
+ margin-bottom: 6px;
+}
+.summary-row.total {
+ font-size: 14px;
+ font-weight: 700;
+ color: var(--ink);
+ margin-top: 8px;
+ border-top: 1px solid var(--line);
+ padding-top: 8px;
+}
+
+.checkout-btn {
+ width: 100%;
+ background: var(--gold);
+ color: #fff;
+ border: none;
+ border-radius: 6px;
+ padding: 14px;
+ font: 700 12px "DM Sans",sans-serif;
+ cursor: pointer;
+ text-align: center;
+ letter-spacing: 0.5px;
+ transition: background 0.2s;
+}
+.checkout-btn:hover { background: #a98855; }
+</style>
+</head>
+<body>
+
+<div class="booking-modal">
+ <div class="modal-header">
+  <h2 class="modal-title"> Keranjang Booking</h2>
+  <button class="close-btn"> <a href="user-page.html">&times;</a> </button>
+ </div>
+
+ <div class="section-label">
+  <span>PERAWATAN DIPILIH (2 LAYANAN)</span>
+  <a href="user-page.html" class="add-more">+ Tambah Perawatan Lain</a>
+ </div>
+
+ <div class="item-card">
+  <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=200&q=80" alt="Nail Art" class="item-img">
+  <div class="item-info">
+   <div class="item-name">Nail Art &amp; Gel Polish</div>
+   <div class="item-price">Rp 280.000</div>
+  </div>
+  <button class="delete-btn" type="button">🗑</button>
+ </div>
+
+ <div class="item-card">
+  <img src="https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=200&q=80" alt="Manicure" class="item-img">
+  <div class="item-info">
+   <div class="item-name">Classic Manicure &amp; Pedicure</div>
+   <div class="item-price">Rp 150.000</div>
+  </div>
+  <button class="delete-btn" type="button">🗑</button>
+ </div>
+
+ <div class="date-section">
+  <div class="date-header-row">
+   <span class="section-label" style="margin:0;">TANGGAL KUNJUNGAN</span>
+   <div class="month-year" id="monthYearLabel">Juni 2026</div>
+   <div class="date-nav-btns">
+    <button class="date-nav-btn" id="prevDatesBtn">&#10094;</button>
+    <button class="date-nav-btn" id="nextDatesBtn">&#10095;</button>
+   </div>
+  </div>
+  <div class="dates-grid" id="datesGrid">
+   <!-- Dynamically rendered -->
+  </div>
+ </div>
+
+ <div class="time-section">
+  <div class="section-label">JAM KUNJUNGAN</div>
+  <div class="time-grid">
+   <button class="time-btn">10.00 WIB</button>
+   <button class="time-btn">13.00 WIB</button>
+   <button class="time-btn active">16.00 WIB</button>
+   <button class="time-btn">17.00 WIB</button>
+   <button class="time-btn">19.00 WIB</button>
+  </div>
+ </div>
+
+ <div class="payment-section">
+  <div class="section-label">METODE PEMBAYARAN</div>
+  
+  <label class="payment-option selected" id="optQris">
+   <input type="radio" name="paymentMethod" value="qris" checked>
+   <div class="payment-details">
+    <div class="payment-title">QRIS / E-Wallet</div>
+    <div class="payment-desc">Gopay, ShopeePay, DANA, OVO</div>
+   </div>
+  </label>
+
+  <label class="payment-option" id="optBank">
+   <input type="radio" name="paymentMethod" value="bank">
+   <div class="payment-details">
+    <div class="payment-title">Transfer Bank</div>
+    <div class="payment-desc">BCA, Mandiri, BRI, BNI</div>
+   </div>
+  </label>
+ </div>
+
+ <div class="summary-section">
+  <div class="summary-row">
+   <span>Subtotal Layanan (2 item)</span>
+   <span>Rp 430.000</span>
+  </div>
+  <div class="summary-row">
+   <span>Biaya Penanganan / Admin</span>
+   <span>Rp 0</span>
+  </div>
+  <div class="summary-row total">
+   <span>Total Pembayaran</span>
+   <span>Rp 430.000</span>
+  </div>
+ </div>
+
+ <button class="checkout-btn" id="checkoutBtn">Konfirmasi &amp; Bayar Sekarang</button>
+</div>
+
+<script>
+
+ // Fungsi untuk Memperbarui Total Harga & Jumlah Item
+function updateSummary() {
+  const itemCards = document.querySelectorAll('.item-card');
+  let subtotal = 0;
+
+  itemCards.forEach(card => {
+    const price = parseInt(card.getAttribute('data-price')) || 0;
+    subtotal += price;
+  });
+
+  // Format ke Rupiah
+  const formattedSubtotal = 'Rp ' + subtotal.toLocaleString('id-ID');
+
+  // Update teks di HTML
+  document.querySelector('.section-label span').textContent = `PERAWATAN DIPILIH (${itemCards.length} LAYANAN)`;
+  document.querySelectorAll('.summary-row')[0].querySelectorAll('span')[1].textContent = formattedSubtotal;
+  document.querySelectorAll('.summary-row.total span')[1].textContent = formattedSubtotal;
+
+  // Jika keranjang kosong, tampilkan pemberitahuan atau tombol kosong
+  if (itemCards.length === 0) {
+    document.getElementById('checkoutBtn').disabled = true;
+    document.getElementById('checkoutBtn').style.opacity = '0.5';
+    document.getElementById('checkoutBtn').textContent = 'Keranjang Kosong';
+  }
+}
+
+// Logika Tombol Hapus (Delete)
+document.querySelectorAll('.delete-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const card = e.target.closest('.item-card');
+    if (card) {
+      card.remove(); // Menghapus elemen kartu dari DOM
+      updateSummary(); // Memperbarui perhitungan harga & jumlah item
+    }
+  });
+});
+
+// Navigasi Tanggal Dinamis
+const datesGrid = document.getElementById('datesGrid');
+const monthYearLabel = document.getElementById('monthYearLabel');
+
+let selectedDateStr = "4 Jun";
+const monthsNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+const daysNames = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+
+function renderDates(startOffset = 0) {
+ datesGrid.innerHTML = '';
+ let baseTime = new Date(2026, 5, 4).getTime() + (startOffset * 24 * 60 * 60 * 1000);
+ 
+ for(let i = 0; i < 5; i++) {
+  let d = new Date(baseTime + (i * 24 * 60 * 60 * 1000));
+  let dayName = daysNames[d.getDay()];
+  let dayNum = d.getDate();
+  let monthShort = d.toLocaleString('id-ID', { month: 'short' });
+  let fullStr = `${dayNum} ${monthShort}`;
+
+  let card = document.createElement('div');
+  card.className = `date-card ${fullStr === selectedDateStr ? 'active' : ''}`;
+  card.innerHTML = `
+   <div class="day-name">${dayName}</div>
+   <div class="day-num">${dayNum}</div>
+   <div class="month-short">${monthShort}</div>
+  `;
+  card.addEventListener('click', () => {
+   selectedDateStr = fullStr;
+   renderDates(startOffset);
+  });
+  datesGrid.appendChild(card);
+ }
+ 
+ let firstVisible = new Date(baseTime);
+ monthYearLabel.textContent = `${monthsNames[firstVisible.getMonth()]} ${firstVisible.getFullYear()}`;
+}
+
+renderDates(0);
+
+let currentOffset = 0;
+document.getElementById('nextDatesBtn').addEventListener('click', () => {
+ currentOffset += 5;
+ renderDates(currentOffset);
+});
+document.getElementById('prevDatesBtn').addEventListener('click', () => {
+ currentOffset = Math.max(0, currentOffset - 5);
+ renderDates(currentOffset);
+});
+
+// Jam kunjungan
+document.querySelectorAll('.time-btn').forEach(btn => {
+ btn.addEventListener('click', () => {
+  document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+ });
+});
+
+// Pilihan Metode Pembayaran
+const optQris = document.getElementById('optQris');
+const optBank = document.getElementById('optBank');
+const radioQris = optQris.querySelector('input');
+const radioBank = optBank.querySelector('input');
+
+optQris.addEventListener('click', () => {
+ radioQris.checked = true;
+ optQris.classList.add('selected');
+ optBank.classList.remove('selected');
+});
+
+optBank.addEventListener('click', () => {
+ radioBank.checked = true;
+ optBank.classList.add('selected');
+ optQris.classList.remove('selected');
+});
+
+// Aksi Tombol Konfirmasi & Bayar Sekarang
+document.getElementById('checkoutBtn').addEventListener('click', () => {
+ const selectedPayment = radioQris.checked ? 'qris' : 'bank';
+ if(selectedPayment === 'qris') {
+  // Arahkan ke file page QRIS Anda
+  window.location.href = 'user-qris.html'; 
+ } else {
+  // Arahkan ke file page Bank Anda
+  window.location.href = 'user-bank.html';
+ }
+});
+</script>
+</body>
+</html>

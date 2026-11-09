@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studio Flawless - Tambah Perawatan Baru</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#f5f2ec;--white:#fff;--ink:#25231f;--muted:#77736d;--gold:#b99a68;--line:#e9e4dc;--gold-light:#faf6f0}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--cream);color:var(--ink);font-family:"DM Sans",sans-serif;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
+
+/* Form Container / Card */
+.form-card {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(40,30,20,.08);
+  width: 100%;
+  max-width: 520px;
+  padding: 28px;
+  border: 1px solid var(--line);
+}
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 16px;
+}
+.form-title { font: 600 20px "Playfair Display",serif; color: var(--ink); }
+.close-btn { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--muted); text-decoration: none; line-height: 1; }
+
+/* Form Group */
+.form-group { margin-bottom: 16px; }
+.form-group label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.form-control {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 12px;
+  background: #faf8f5;
+  color: var(--ink);
+  transition: border-color 0.2s;
+}
+.form-control:focus {
+  outline: none;
+  border-color: var(--gold);
+  background: var(--white);
+}
+
+/* Tombol Aksi */
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+.btn {
+  flex: 1;
+  background: var(--gold);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 14px;
+  font: 700 12px "DM Sans", sans-serif;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  transition: background 0.2s;
+  display: inline-block;
+}
+.btn:hover { background: #a98855; }
+.btn-outline {
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.btn-outline:hover { background: var(--gold-light); border-color: var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="form-card">
+  <!-- Header Modal/Form -->
+  <div class="form-header">
+    <h2 class="form-title">Tambah Perawatan Baru</h2>
+    <a href="admin-dashboard.html" class="close-btn">&times;</a>
+  </div>
+
+  <!-- Form Input -->
+  <form onsubmit="event.preventDefault(); window.location.href='admin-dashboard.html';">
+    
+    <!-- Nama Perawatan -->
+    <div class="form-group">
+      <label>Nama Perawatan</label>
+      <input type="text" class="form-control" placeholder="Contoh: Hair Spa & Scalp Treatment" required>
+    </div>
+
+    <!-- Kategori (Perawatan Wajah, Rambut, dll) -->
+    <div class="form-group">
+      <label>Kategori</label>
+      <select class="form-control" required>
+        <option value="" disabled selected>Pilih Kategori Perawatan</option>
+        <option value="Perawatan Wajah">Perawatan Wajah</option>
+        <option value="Perawatan Rambut">Perawatan Rambut</option>
+        <option value="Perawatan Kuku">Perawatan Kuku</option>
+        <option value="Perawatan Tubuh">Perawatan Tubuh</option>
+      </select>
+    </div>
+
+    <!-- Keterangan -->
+    <div class="form-group">
+      <label>Keterangan</label>
+      <textarea class="form-control" rows="3" placeholder="Masukkan deskripsi atau detail layanan..." required></textarea>
+    </div>
+
+    <!-- Harga Layanan -->
+    <div class="form-group">
+      <label>Harga Layanan</label>
+      <input type="text" class="form-control" placeholder="Contoh: Rp 120.000" required>
+    </div>
+
+    <!-- Foto Katalog -->
+    <div class="form-group">
+      <label>Foto Katalog (URL Gambar)</label>
+      <input type="url" class="form-control" placeholder="https://images.unsplash.com/..." required>
+    </div>
+
+    <!-- Tombol Navigasi a href -->
+    <div class="form-actions">
+      <a href="admin-dashboard.html" class="btn btn-outline">Batal</a>
+      <a href="admin-dashboard-layanan.html" class="btn">Tambah Perawatan</a>
+    </div>
+
+  </form>
+</div>
+
+</body>
+</html>

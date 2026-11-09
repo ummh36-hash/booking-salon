@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rating Kami | Studio Flawless</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #f5f2ec;
+      --white: #fff;
+      --ink: #25231f;
+      --muted: #77736d;
+      --gold: #b99a68;
+      --line: #e9e4dc;
+      --soft-gold: #d9c7a9;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--cream); color: var(--ink); font-family: "DM Sans", sans-serif; }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1120px, 86%); margin: auto; }
+
+    header {
+      min-height: 76px; background: var(--white); display: flex; align-items: center;
+      position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--line);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: flex; align-items: center; gap: 10px; white-space: nowrap; }
+    .brand-mark {
+      width: 39px; height: 39px; border: 1px solid var(--soft-gold); border-radius: 50%;
+      display: grid; place-items: center; color: var(--gold); font: 20px "Playfair Display", serif;
+    }
+    .brand-name { font: 600 20px "Playfair Display", serif; }
+    .nav-links { display: flex; align-items: center; gap: 25px; font-size: 11px; color: #55514b; }
+    .nav-links a { transition: color .2s; }
+    .nav-links a:hover, .nav-links a[aria-current="page"] { color: var(--gold); }
+
+    main { min-height: 620px; padding: 58px 0 78px; }
+    .rating-shell {
+      max-width: 900px; margin: auto; padding: 42px 54px 48px;
+      background: rgba(255,255,255,.72); border: 1px solid var(--line);
+      border-radius: 16px; box-shadow: 0 12px 35px rgba(37,35,31,.055);
+    }
+    .eyebrow { color: var(--gold); font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+    h1 { font: 600 29px "Playfair Display", serif; letter-spacing: .3px; margin-bottom: 10px; }
+    .intro { color: var(--muted); font-size: 12px; line-height: 1.8; margin-bottom: 30px; }
+    .product {
+      display: flex; align-items: center; gap: 20px; padding: 17px;
+      background: var(--cream); border: 1px solid var(--line); border-radius: 12px; margin-bottom: 30px;
+    }
+    .product img { width: 92px; height: 78px; object-fit: cover; border-radius: 9px; }
+    .product-copy small { display: block; color: var(--muted); font-size: 9px; letter-spacing: 1.2px; margin-bottom: 6px; text-transform: uppercase; }
+    .product-copy h2 { font: 600 19px "Playfair Display", serif; }
+    .product-copy p { color: var(--muted); font-size: 11px; margin-top: 5px; }
+    .form-group { margin-top: 25px; }
+    .form-group label { display: block; font-size: 10px; font-weight: 700; letter-spacing: 1.1px; margin-bottom: 12px; text-transform: uppercase; }
+    .stars { display: flex; gap: 7px; align-items: center; }
+    .star {
+      border: 0; background: transparent; color: #d8d2c8; cursor: pointer;
+      font-size: 33px; line-height: 1; padding: 1px; transition: color .15s, transform .15s;
+    }
+    .star:hover { transform: scale(1.12); }
+    .star.active { color: #d99a36; }
+    .rating-hint { color: var(--muted); font-size: 11px; margin-top: 9px; min-height: 16px; }
+    textarea {
+      width: 100%; min-height: 145px; resize: vertical; border: 1px solid #ded8ce;
+      border-radius: 9px; background: #fff; padding: 15px 16px; color: var(--ink);
+      font: 12px "DM Sans", sans-serif; line-height: 1.7; outline: none; transition: border .2s, box-shadow .2s;
+    }
+    textarea::placeholder { color: #aaa49b; }
+    textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(185,154,104,.13); }
+    .form-bottom { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-top: 22px; }
+    .note { color: var(--muted); font-size: 10px; line-height: 1.6; }
+    .submit-btn {
+      border: 1px solid var(--gold); background: var(--gold); color: #fff; border-radius: 7px;
+      padding: 13px 31px; font: 700 10px "DM Sans", sans-serif; letter-spacing: 1px;
+      cursor: pointer; transition: .2s;
+    }
+    .submit-btn:hover { background: var(--ink); border-color: var(--ink); transform: translateY(-1px); }
+    .feedback { display: none; margin-top: 18px; padding: 13px 15px; border-radius: 8px; font-size: 11px; line-height: 1.6; }
+    .feedback.success { display: block; color: #42634b; background: #edf4ed; border: 1px solid #d7e6d8; }
+    .feedback.error { display: block; color: #8b4540; background: #fbefed; border: 1px solid #efd7d3; }
+
+    footer { background: #fff; padding: 38px 0 23px; border-top: 1px solid var(--line); }
+    .footer-row { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+    footer h3 { font: 600 18px "Playfair Display", serif; margin-bottom: 6px; }
+    footer p, footer a { color: var(--muted); font-size: 10px; line-height: 1.8; }
+    .copyright { border-top: 1px solid var(--line); margin-top: 25px; padding-top: 16px; color: #9a958d; font-size: 9px; display: flex; justify-content: space-between; gap: 15px; }
+
+    @media (max-width: 760px) {
+      .container { width: 92%; }
+      header { padding: 12px 0; }
+      .nav { flex-wrap: wrap; }
+      .brand-name { font-size: 18px; }
+      .nav-links { order: 3; width: 100%; justify-content: center; gap: 17px; padding-top: 7px; font-size: 10px; }
+      main { padding: 35px 0 55px; }
+      .rating-shell { padding: 30px 25px 32px; }
+      .footer-row { align-items: flex-start; flex-direction: column; }
+    }
+    @media (max-width: 430px) {
+      .nav-links { gap: 12px; }
+      .nav-links a { font-size: 9px; }
+      .rating-shell { padding: 25px 17px; border-radius: 12px; }
+      h1 { font-size: 25px; }
+      .product { gap: 13px; padding: 12px; }
+      .product img { width: 76px; height: 70px; }
+      .product-copy h2 { font-size: 17px; }
+      .star { font-size: 30px; }
+      .form-bottom { align-items: flex-start; flex-direction: column; }
+      .submit-btn { width: 100%; }
+      .copyright { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="nav container" aria-label="Navigasi utama">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">S</span><span class="brand-name">Studio Flawless</span>
+      </a>
+      <div class="nav-links">
+        <a href="studio_flawless_katalog_keranjang_styled.html#layanan">LAYANAN</a>
+        <a href="#contact">KONTAK</a>
+        <a href="studio_flawless_pesanan_saya_styled.html">PESANAN SAYA</a>
+      </div>
+      <a class="nav-links" href="studio_flawless_katalog_keranjang_styled.html#keranjang">ICON KERANJANG</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="rating-shell" aria-labelledby="page-title">
+      <p class="eyebrow">Your experience matters</p>
+      <h1 id="page-title">RATING KAMI</h1>
+      <p class="intro">Terima kasih telah memilih Studio Flawless. Bagikan pengalaman Anda agar kami dapat terus memberikan pelayanan terbaik.</p>
+
+      <div class="product">
+        <img src="https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=500&q=85" alt="Suasana perawatan di Studio Flawless">
+        <div class="product-copy">
+          <small>Produk / Layanan</small>
+          <h2>MESSAGE</h2>
+          <p>Bagaimana pengalaman perawatan Anda?</p>
+        </div>
+      </div>
+
+      <form id="ratingForm">
+        <div class="form-group">
+          <label>Nilai produk</label>
+          <div class="stars" role="radiogroup" aria-label="Pilih rating bintang">
+            <button class="star" type="button" data-value="1" role="radio" aria-checked="false" aria-label="1 dari 5 bintang">★</button>
+            <button class="star" type="button" data-value="2" role="radio" aria-checked="false" aria-label="2 dari 5 bintang">★</button>
+            <button class="star" type="button" data-value="3" role="radio" aria-checked="false" aria-label="3 dari 5 bintang">★</button>
+            <button class="star" type="button" data-value="4" role="radio" aria-checked="false" aria-label="4 dari 5 bintang">★</button>
+            <button class="star" type="button" data-value="5" role="radio" aria-checked="false" aria-label="5 dari 5 bintang">★</button>
+          </div>
+          <p class="rating-hint" id="ratingHint">Pilih bintang untuk memberikan penilaian.</p>
+        </div>
+
+        <div class="form-group">
+          <label for="review">Deskripsi</label>
+          <textarea id="review" name="review" placeholder="Ceritakan pengalaman Anda menggunakan layanan kami..." maxlength="1000"></textarea>
+        </div>
+
+        <div class="form-bottom">
+          <p class="note">Masukan Anda sangat berarti bagi kami.<br>Maksimal 1.000 karakter.</p>
+          <button class="submit-btn" type="submit">KIRIM RATING</button>
+        </div>
+        <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer id="contact">
+    <div class="container">
+      <div class="footer-row">
+        <div>
+          <h3>Studio Flawless</h3>
+          <p>Temukan kenyamanan dalam setiap perawatan.</p>
+        </div>
+        <p>Jakarta, Indonesia<br>Senin–Sabtu | 09.00–20.00 WIB</p>
+      </div>
+      <div class="copyright">
+        <span>© 2026 Studio Flawless. All rights reserved.</span>
+        <span>Designed for your beauty &amp; confidence.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const starButtons = [...document.querySelectorAll(".star")];
+    const ratingHint = document.getElementById("ratingHint");
+    const ratingForm = document.getElementById("ratingForm");
+    const feedback = document.getElementById("feedback");
+    let selectedRating = 0;
+
+    const ratingLabels = {
+      1: "Kurang baik",
+      2: "Cukup",
+      3: "Baik",
+      4: "Sangat baik",
+      5: "Luar biasa!"
+    };
+
+    function setRating(value) {
+      selectedRating = value;
+      starButtons.forEach((star, index) => {
+        const active = index < value;
+        star.classList.toggle("active", active);
+        star.setAttribute("aria-checked", String(Number(star.dataset.value) === value));
+      });
+      ratingHint.textContent = `${value} dari 5 bintang — ${ratingLabels[value]}`;
+      feedback.className = "feedback";
+      feedback.textContent = "";
+    }
+
+    starButtons.forEach((star, index) => {
+      star.addEventListener("click", () => setRating(Number(star.dataset.value)));
+      star.addEventListener("keydown", event => {
+        if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
+          event.preventDefault();
+          const direction = event.key === "ArrowRight" ? 1 : -1;
+          const next = Math.min(5, Math.max(1, (selectedRating || index + 1) + direction));
+          setRating(next);
+          starButtons[next - 1].focus();
+        }
+      });
+    });
+
+    ratingForm.addEventListener("submit", event => {
+      event.preventDefault();
+      const review = document.getElementById("review").value.trim();
+
+      if (!selectedRating) {
+        feedback.textContent = "Silakan pilih jumlah bintang terlebih dahulu.";
+        feedback.className = "feedback error";
+        return;
+      }
+      if (!review) {
+        feedback.textContent = "Silakan isi deskripsi pengalaman Anda terlebih dahulu.";
+        feedback.className = "feedback error";
+        document.getElementById("review").focus();
+        return;
+      }
+
+      // Demo front-end: sambungkan bagian ini ke backend/database untuk menyimpan rating.
+      feedback.textContent = `Terima kasih! Rating ${selectedRating}/5 berhasil disiapkan. Fitur penyimpanan belum terhubung ke database.`;
+      feedback.className = "feedback success";
+      ratingForm.reset();
+      selectedRating = 0;
+      starButtons.forEach(star => {
+        star.classList.remove("active");
+        star.setAttribute("aria-checked", "false");
+      });
+      ratingHint.textContent = "Pilih bintang untuk memberikan penilaian.";
+    });
+  </script>
+</body>
+</html>
